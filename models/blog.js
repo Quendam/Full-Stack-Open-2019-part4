@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
-const mongoUrl = process.env.MONGODB_URI
+const config = require('../utils/config')
 
-console.log('connecting to', mongoUrl)
+console.log('connecting to', config.MONGODB_URI)
 
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('connected to MongoDB')
   })
