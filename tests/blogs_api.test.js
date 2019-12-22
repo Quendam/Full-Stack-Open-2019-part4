@@ -152,7 +152,15 @@ describe('blogs api', () => {
     expect(response.status).toBe(400)
     
   })
-  
+
+  test('blog entry can be removed', async () => {
+    const response = await api.delete('/api/blogs/5a422bc61b54a676234d17fc')
+    expect(response.status).toBe(204)
+
+    const getResponse = await api.get('/api/blogs')
+    expect(getResponse.body.length).toBe(5)
+   
+  })
 })
 
 afterAll(() => {  
