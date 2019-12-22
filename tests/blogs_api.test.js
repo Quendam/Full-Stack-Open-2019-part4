@@ -59,10 +59,13 @@ const initialBlogs = [
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  initialBlogs.forEach(async blog => {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  })
+  await new Blog(initialBlogs[0]).save()
+  await new Blog(initialBlogs[1]).save()
+  await new Blog(initialBlogs[2]).save()
+  await new Blog(initialBlogs[3]).save()
+  await new Blog(initialBlogs[4]).save()
+  await new Blog(initialBlogs[5]).save()
+
 })
 
 describe('blogs api', () => {
@@ -74,12 +77,12 @@ describe('blogs api', () => {
       .expect('Content-Type', /application\/json/)
   })
   
-  test('there are six blohg', async () => {
+  test('there are six blogs', async () => {
     const response = await api.get('/api/blogs')
-    
+
     expect(response.body.length).toBe(6)
   })
-    
+
   test('id to be defined', async () => {
     const response = await api.get('/api/blogs')
     
@@ -87,8 +90,38 @@ describe('blogs api', () => {
       expect(blog.id).toBeDefined()
     })
   })
+
+  test('new blog can be added via post', async () => {
+    const blogToSave =  {
+      title: "Testing save",
+      author: "FullStack Testing",
+      url: "https://https://fullstackopen.com/",
+      likes: 10000,
+    }
+
+    // Check response first
+    const response = await api.post('/api/blogs').send(blogToSave)
+    expect(response.body.id).toBeDefined()
+
+    // Check length has increased
+    const getResponse = await api.get('/api/blogs')
+    expect(getResponse.body.length).toBe(7)
+
+     // Check that we do have our blog added
+     await Blog
+      .find({'title': 'Testing save'})
+      .then(response => {
+        expect(response.length).toBe(1)
+        expect(response[0]).toHaveProperty('title', 'Testing save')
+        expect(response[0]).toHaveProperty('author', 'FullStack Testing')
+        expect(response[0]).toHaveProperty('url', 'https://https://fullstackopen.com/')
+        expect(response[0]).toHaveProperty('likes', 10000)
+      })
+
+  })
+    
 })
 
-afterAll(() => {
+afterAll(() => {  
   mongoose.connection.close()
 })
