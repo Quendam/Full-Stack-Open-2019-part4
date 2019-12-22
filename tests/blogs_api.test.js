@@ -80,6 +80,13 @@ describe('blogs api', () => {
     expect(response.body.length).toBe(6)
   })
     
+  test('id to be defined', async () => {
+    const response = await api.get('/api/blogs')
+    
+    response.body.forEach(blog => {
+      expect(blog.id).toBeDefined()
+    })
+  })
 })
 
 afterAll(() => {
