@@ -119,6 +119,28 @@ describe('blogs api', () => {
       })
 
   })
+
+  test('ensure likes is always set even none given (default 0)', async () => {
+    const blogToSave =  {
+      title: "Empty id test",
+      author: "FullStack Testing",
+    }
+    const response = await api.post('/api/blogs').send(blogToSave)
+    expect(response.body.id).toBeDefined()
+    
+    // Check length has increased
+    const getResponse = await api.get('/api/blogs')
+    expect(getResponse.body.length).toBe(7)
+
+     // Check that we do have our blog added
+     await Blog
+      .find({'title': 'Empty id test'})
+      .then(response => {
+        expect(response.length).toBe(1)
+        expect(response[0]).toHaveProperty('likes', 0)
+      })
+ 
+  })
     
 })
 
