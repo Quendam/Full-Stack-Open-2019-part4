@@ -124,10 +124,11 @@ describe('blogs api', () => {
     const blogToSave =  {
       title: "Empty id test",
       author: "FullStack Testing",
+      url: "https://https://fullstackopen.com/",
     }
     const response = await api.post('/api/blogs').send(blogToSave)
     expect(response.body.id).toBeDefined()
-    
+
     // Check length has increased
     const getResponse = await api.get('/api/blogs')
     expect(getResponse.body.length).toBe(7)
@@ -141,7 +142,17 @@ describe('blogs api', () => {
       })
  
   })
+
+  test('return bad request when url or title is not given', async () => {
+    const blogToSave =  {
+      author: "FullStack Testing",
+      likes: 10
+    }
+    const response = await api.post('/api/blogs').send(blogToSave)
+    expect(response.status).toBe(400)
     
+  })
+  
 })
 
 afterAll(() => {  
