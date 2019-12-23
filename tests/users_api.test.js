@@ -35,6 +35,48 @@ describe('when there is initially one user at db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
   })
+
+  test('user required to be unique', async () => {
+    const newUser = {
+      username: 'root',
+      password: 'sekret',
+    }
+
+    const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+    expect(result.body.error).toContain('Error, expected `username` to be unique')
+  })
+
+  test('username must be atleast length of 3', async () => {
+    const newUser = {
+      username: 'te',
+      password: 'sekret',
+    }
+
+    const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+    expect(result.body.error).toContain('shorter than the minimum allowed length (3)')
+  })
+
+  test('password must be atleast length of 3', async () => {
+    const newUser = {
+      username: 'taavi',
+      password: 'se',
+    }
+
+    const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+    expect(result.body.error).toContain('Password not given or is too short')
+  })
 })
 
 afterAll(() => {  

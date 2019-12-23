@@ -12,6 +12,13 @@ usersRouter.post('/', async (request, response, next) => {
   
   try{
     const body = request.body
+
+    if(!body.password || body.password.length < 3){
+      response.status(400).json({
+        error: "Password not given or is too short"
+      })
+    }
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
@@ -24,9 +31,7 @@ usersRouter.post('/', async (request, response, next) => {
     const savedUser = await user.save()
 
     response.json(savedUser)
-  } catch(exception) {
-    console.log("Do we get here ", exception);
-    
+  } catch(exception) {    
     next(exception)
   }
 })
