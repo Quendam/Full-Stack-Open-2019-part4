@@ -161,6 +161,23 @@ describe('blogs api', () => {
     expect(getResponse.body.length).toBe(5)
    
   })
+  
+  test('blog entry can be updated', async () => {
+    const newBlog = {
+      title: "React patterns 2",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 50,
+    }
+
+    const response = await api
+      .put('/api/blogs/5a422a851b54a676234d17f7')
+      .send(newBlog)
+    
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('title', 'React patterns 2')
+    expect(response.body).toHaveProperty('likes', 50)   
+  })
 })
 
 afterAll(() => {  
