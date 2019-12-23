@@ -107,16 +107,14 @@ describe('blogs api', () => {
     const getResponse = await api.get('/api/blogs')
     expect(getResponse.body.length).toBe(7)
 
-     // Check that we do have our blog added
-     await Blog
-      .find({'title': 'Testing save'})
-      .then(response => {
-        expect(response.length).toBe(1)
-        expect(response[0]).toHaveProperty('title', 'Testing save')
-        expect(response[0]).toHaveProperty('author', 'FullStack Testing')
-        expect(response[0]).toHaveProperty('url', 'https://https://fullstackopen.com/')
-        expect(response[0]).toHaveProperty('likes', 10000)
-      })
+    // Check that we do have our blog added
+    const blogResponse = await Blog.find({'title': 'Testing save'})
+      
+    expect(blogResponse.length).toBe(1)
+    expect(blogResponse[0]).toHaveProperty('title', 'Testing save')
+    expect(blogResponse[0]).toHaveProperty('author', 'FullStack Testing')
+    expect(blogResponse[0]).toHaveProperty('url', 'https://https://fullstackopen.com/')
+    expect(blogResponse[0]).toHaveProperty('likes', 10000)
 
   })
 
@@ -134,13 +132,9 @@ describe('blogs api', () => {
     expect(getResponse.body.length).toBe(7)
 
      // Check that we do have our blog added
-     await Blog
-      .find({'title': 'Empty id test'})
-      .then(response => {
-        expect(response.length).toBe(1)
-        expect(response[0]).toHaveProperty('likes', 0)
-      })
- 
+    const blogResponse = await Blog.find({'title': 'Empty id test'})
+    expect(blogResponse.length).toBe(1)
+    expect(blogResponse[0]).toHaveProperty('likes', 0)
   })
 
   test('return bad request when url or title is not given', async () => {
