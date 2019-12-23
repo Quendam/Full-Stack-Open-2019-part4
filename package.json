@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Quendam/Full-Stack-Open-2019-part4#readme",
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
