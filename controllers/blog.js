@@ -101,12 +101,29 @@ blogsRouter.put('/:id', async (request, response) => {
   response.status(500).end()  
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-  const result = await Blog.findByIdAndDelete(request.params.id)
-  // if(result){
-    response.status(204).end();
-  // }
-  // response.status(404).end()
+blogsRouter.delete('/:id', async (request, response, next) => {
+  try{    
+    const id = request.params.id
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!request.token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const blog = await Blog.findById(id)
+    
+    if(blog.user.toString() !== decodedToken.id){
+      return response.status(401).json({ 
+        error: 'Invalid user. Only blog creator is allowed to remove blog'
+      })
+    }
+    
+    await Blog.findByIdAndDelete(request.params.id)
+
+    response.status(204).end()
+  }catch(exception){
+    next(exception)
+  }
+
 })
 
 module.exports = blogsRouter
